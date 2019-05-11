@@ -19,8 +19,15 @@ from django.urls import path
 
 import auth.views
 
+# from django.contrib.auth.views import LoginView
+from auth.views import NewLoginView, NewLogoutView, SignupView, HomeView
+
+
 urlpatterns = [
-    path('', auth.views.home),
+    # path('', auth.views.home, name='home'),
+    path('', HomeView.as_view(), name='home'),
     path('admin/', admin.site.urls),
-    path('signup/', auth.views.signup),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', NewLoginView.as_view(), name='login'),
+    path('logout/', NewLogoutView.as_view(), name='logout'),
 ]
