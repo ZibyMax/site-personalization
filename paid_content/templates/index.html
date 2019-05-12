@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if user.is_authenticated %}
+        <div class="header">
+            <h3>Здравствуйте, {{ user.username }}!</h3>
+        </div>
+        <p>Для выхода нажмите <a href="{% url 'logout' %}">сюда</a>.</p>
+            {% if is_paid_access %}
+        <p>Вам предоставлен полный доступ ко всем статьям</p>
+            {% else %}
+        <p>Вам предоставлен ограниченный доступ к материалам: про пиратов читать нельзя:)<br>
+            Для получения полного доступа оформите <a href="{% url 'subscribe_paid' %}">платную подписку</a>. </p>
+            {% endif %}
+        {% else %}
+        <div class="header">
+            <h3>Здравствуйте!</h3>
+        </div>
+        <p>Внимание, часть статей доступна только для зарегистрированных пользователей оформивших расширенную подписку.</p>
+        <p><a href="{% url 'login' %}">Войдите</a> для получения дополнительных возможностей.</p>
+        {% endif %}
+        <br><p>Перейти к <a href="{% url 'articles' %}">списку статей.</a></p>
+    </div>
+{% endblock %}

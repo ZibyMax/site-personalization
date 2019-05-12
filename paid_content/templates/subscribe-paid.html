@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Оформление платной подписки{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="header"></div>
+        <h2>Оформление платной подписки</h2>
+        <p>{{ user.username }}, для оформления подписки введите свое имя в поле ниже</p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.errors }}
+            {{ form.as_p }}
+            <input type="submit" value="Оформить">
+        </form>
+        <br>
+        <p>Чтобы отказаться от оформления вернитесь на <a href="{% url 'index' %}">главную страницу</a>.</p>
+    </div>
+{% endblock %}
