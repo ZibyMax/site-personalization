@@ -7,10 +7,9 @@
     <div class="container">
         <div class="header"></div>
         <h2>Оформление платной подписки</h2>
-        <p>{{ user.username }}, для оформления подписки введите свое имя в поле ниже</p>
+        <p>{{ user.username }}, для оформления подписки поставьте галочку в поле ниже</p>
         <form method="post">
             {% csrf_token %}
-            {{ form.errors }}
             {{ form.as_p }}
             <input type="submit" value="Оформить">
         </form>

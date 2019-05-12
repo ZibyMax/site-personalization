@@ -22,12 +22,11 @@ class PaidView(FormView):
     form_class = PaidForm
     success_url = reverse_lazy('index')
 
-    def get_form_kwargs(self):
-        kwargs = super(PaidView, self).get_form_kwargs()
-        kwargs.update({
-            'current_user': self.request.user
-        })
-        return kwargs
+    def form_valid(self, form):
+        access = Profile.objects.get(user=self.request.user)
+        access.is_paid_access = True
+        access.save()
+        return super().form_valid(form)
 
 
 def show_articles(request):
