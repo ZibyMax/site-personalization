@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import FormView
-from django.views.generic.base import TemplateView
+from django.views.generic import FormView, ListView, DetailView, TemplateView
+# from django.views.generic.base import TemplateView
 from .forms import PaidForm
-from .models import Profile
+from .models import Profile, Article
 
 
 class HomeView(TemplateView):
@@ -29,15 +29,40 @@ class PaidView(FormView):
         return super().form_valid(form)
 
 
-def show_articles(request):
-    return render(
-        request,
-        'articles.html'
-    )
+# def show_articles(request):
+#     return render(
+#         request,
+#         'articles.html'
+#     )
 
 
-def show_article(request, id):
-    return render(
-        request,
-        'article.html'
-    )
+class ArticleListView(ListView):
+    template_name = 'articles.html'
+    model = Article
+    ordering = ['title']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ArticleListView, self).get_context_data()
+        if self.request.user.is_authenticated:
+            profile = Profile.objects.get(user=self.request.user)
+            context['is_paid_access'] = profile.is_paid_access
+        else:
+            context['is_paid_access'] = False
+        return context
+
+
+# def show_article(request, id):
+#     return render(
+#         request,
+#         'article.html'
+#     )
+
+
+class ArticleView(DetailView):
+    template_name = 'article.html'
+    model = Article
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ArticleView, self).get_context_data()
+        print(context)
+        return context

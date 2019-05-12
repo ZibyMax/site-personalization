@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Журнал{% endblock %}
+{% block title %}Список статей{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -9,9 +9,14 @@
             <h1>Список статей</h1>
         </div>
         <div class="articles">
-            <h3>Статья 1</h3>
-            <h3>Статья 2</h3>
-            <h3>Статья 3</h3>
+            <ul>
+            {% for article in article_list %}
+            <li><b>
+                <a href="{% url 'article' article.pk %}">{{ article.title }}
+                    {% if article.is_paid_access %}(ограниченный доступ){% endif %}</a>
+            </b></li>
+            {% endfor %}
+            </ul>
         </div>
     </div>
 {% endblock %}
