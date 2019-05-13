@@ -7,8 +7,17 @@
     <div class="container">
         <div class="header">
             <h3>{{ article.title }}</h3>
-            <img src="{{ static article.picture }}">
-            <p>{{ article.content }}</p>
+            {% if not article.is_paid_access %}
+                {% static article.picture as picture %}
+                <img src="{{ picture }}" width="300px">
+                <p>{{ article.content }}</p>
+            {% elif article.is_paid_access and user_is_paid_access %}
+                {% static article.picture as picture %}
+                <img src="{{ picture }}" width="300px">
+                <p>{{ article.content }}</p>
+            {% else %}
+            <p>Сожалеем, доступ к статье ограничен!</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

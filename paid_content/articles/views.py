@@ -13,7 +13,7 @@ class HomeView(TemplateView):
         context = self.get_context_data(**kwargs)
         if request.user.is_authenticated:
             profile = Profile.objects.get(user=request.user)
-            context['is_paid_access'] = profile.is_paid_access
+            context['user_is_paid_access'] = profile.is_paid_access
             return self.render_to_response(context)
 
 
@@ -64,5 +64,9 @@ class ArticleView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(ArticleView, self).get_context_data()
-        print(context)
+        if self.request.user.is_authenticated:
+            profile = Profile.objects.get(user=self.request.user)
+            context['user_is_paid_access'] = profile.is_paid_access
+        else:
+            context['user_is_paid_access'] = False
         return context
