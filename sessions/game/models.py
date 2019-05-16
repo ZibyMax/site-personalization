@@ -6,8 +6,13 @@ class Player(models.Model):
 
 
 class Game(models.Model):
-    pass
+    player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='+', default=None)
+    player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='+', default=None)
+    is_over = models.BooleanField(default=False)
+    value_found = models.BooleanField(default=False)
+    current_attempt = models.IntegerField(default=None)
+    correct_value = models.IntegerField(default=None)
 
 
-class PlayerGameInfo(models.Model):
-    pass
+# class PlayerGameInfo(models.Model):
+#     pass
