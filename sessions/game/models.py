@@ -9,8 +9,8 @@ class Game(models.Model):
     player1 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='+', default=None)
     player2 = models.ForeignKey(Player, on_delete=models.CASCADE, related_name='+', default=None)
     is_over = models.BooleanField(default=False)
-    value_found = models.BooleanField(default=False)
-    current_attempt = models.IntegerField(default=None)
+    is_value_found = models.BooleanField(default=False)
+    current_attempt = models.IntegerField(default=0)
     correct_value = models.IntegerField(default=None)
 
 
