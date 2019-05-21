@@ -24,7 +24,8 @@ def get_player(request):
     return player
 
 
-def get_current_game(player):
+def get_current_game(player, reset):
+    current_game = None
     current_game = Game.objects.filter(player1=player).filter(is_over=False).last()
     if current_game is None:
         current_game = Game.objects.filter(player2=player).filter(is_over=False).last()
@@ -33,16 +34,16 @@ def get_current_game(player):
         if current_game is not None:
             current_game.player2 = player
             current_game.save()
-    if current_game is None:
+    if current_game is None and not reset:
         current_game = Game.objects.filter(Q(player1=player) | Q(player2=player)).filter(is_over=True).last()
     if current_game is None:
         current_game = Game.objects.create(player1=player)
     return current_game
 
 
-def game(request):
+def game(request, reset=False):
     player = get_player(request)
-    current_game = get_current_game(player)
+    current_game = get_current_game(player, reset)
     is_first_player = True if player == current_game.player1 else False
     context = {}
 
@@ -91,9 +92,3 @@ def game(request):
     })
 
     return render(request, 'game.html', context)
-
-
-def reset(request):
-    if request.session.get('player_id', None):
-        del request.session['player_id']
-    return redirect(reverse('game'))
