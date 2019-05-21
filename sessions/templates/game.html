@@ -8,6 +8,7 @@
         <div class="header">
             <h1>Игра "Угадай число"</h1>
         </div>
+
         {% if player1 %}
             <h2>Загаданное число: {{ correct_value }}</h2>
             <p>Второй игрок будет пытаться угадать его</p>
@@ -17,7 +18,7 @@
                     {% else %}
                         <h2>Ваше число не угадали!</h2>
                     {% endif %}
-                { % endif %}
+                {% endif %}
         {% else %}
             {% if game_is_over %}
                 {% if is_value_found %}
@@ -31,13 +32,14 @@
                     {{ form }}
                     <input type="submit" value="Отправить">
                 </form>
-                {% if values_comparison == 'more %}
+                {% if values_comparison == 'more' %}
                     <h2>Загаданное число больше числа {{ current_value }}</h2>
                 {% endif %}
-                {% if values_comparison == 'less %}
+                {% if values_comparison == 'less' %}
                     <h2>Загаданное число меньше числа {{ current_value }}</h2>
                 {% endif %}
             {% endif %}
         {% endif %}
+
     </div>
 {% endblock %}
