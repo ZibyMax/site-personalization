@@ -8,25 +8,37 @@
         <div class="header">
             <h1>Игра "Угадай число"</h1>
         </div>
-        {% if first_player %}
-            <h2>Загаданное число: {{ correct_value }}</h2>
-            <p>Второй игрок будет пытаться угадать его</p>
+        {% if game_is_over %}
+            {% if is_first_player %}
+                <h2>Загаданное число: {{ correct_value }}</h2>
+                <p>Второй игрок будет пытаться угадать его</p>
+                {% if is_value_found %}
+                    <h2>Ваше число угадано с {{ attempts }} попытки!</h2>
+                {% else %}
+                    <h2>Ваше число не угадали!</h2>
+                {% endif %}
+            {% else %}
+                {% if is_value_found %}
+                    <h2>Вы угадали число с {{ attempts }} попытки!</h2>
+                    <h2>Было загадано число: {{ correct_value }}</h2>
+                {% else %}
+                    <h2>Вы не угадали!</h2>
+                {% endif %}
+            {% endif %}
         {% else %}
-            <form method="post">
-                {% csrf_token %}
-                {{ form }}
-                <input type="submit" value="Отправить">
-            </form>
-            {% if values_comparison %}
-                <h2>values_comparison {{ current_value }}</h2>
+            {% if is_first_player %}
+                <h2>Загаданное число: {{ correct_value }}</h2>
+                <p>Второй игрок будет пытаться угадать его</p>
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Отправить">
+                </form>
+                {% if values_comparison %}
+                    <h2>{{ values_comparison}} {{ current_value }}</h2>
+                {% endif %}
             {% endif %}
         {% endif %}
-
-        <ul>
-            <li>Текущий игрок: {{ player }}</li>
-            <li>Текущая игра: {{ game }}</li>
-            <li>Первый игрок: {{ first }}</li>
-            <li>Второй игрок: {{ second }}</li>
-        </ul>
     </div>
 {% endblock %}

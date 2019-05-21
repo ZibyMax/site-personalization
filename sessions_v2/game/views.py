@@ -45,14 +45,9 @@ def game(request):
     is_first_player = True if player == current_game.player1 else False
     context = {}
 
-    context.update({'player': player,
-                    'game': current_game,
-                    'first': current_game.player1,
-                    'second': current_game.player2})
-
     if not current_game.is_over:
         if is_first_player:
-            if not game.correct_value:
+            if not current_game.correct_value:
                 current_game.correct_value = randint(settings.GAME_MIN_VALUE, settings.GAME_MAX_VALUE)
                 current_game.save()
             context.update({
@@ -63,10 +58,10 @@ def game(request):
             current_value = None
             if request.method == 'POST':
                 form = GameForm(request.POST)
-                if form.is_valid():
-                    current_value = form.cleaned_data['value']
             else:
                 form = GameForm()
+            if form.is_valid():
+                current_value = form.cleaned_data['value']
             context.update({'form': form,
                             'current_value': current_value})
 
@@ -74,22 +69,24 @@ def game(request):
                 if current_value == current_game.correct_value:
                     current_game.is_over = True
                     current_game.is_value_found = True
+                    current_game.save()
                 else:
                     if current_game.current_attempt + 1 > settings.GAME_MAX_ATTEMPTS:
                         current_game.is_over = True
                         current_game.is_value_found = False
+                        current_game.save()
                     else:
                         current_game.current_attempt += 1
                         current_game.save()
                         values_comparison = 'Загаданное число больше' if current_value < current_game.correct_value\
                             else 'Загаданное число меньше'
                         context['values_comparison'] = values_comparison
-        return render(request, 'game.html', context)
-
     context.update({
         'is_first_player': is_first_player,
-        'correct_value': current_game.correct_value,
+        'game_is_over': current_game.is_over,
+        'is_value_found': current_game.is_value_found,
         'attempts': current_game.current_attempt,
-        'is_value_found': current_game.is_value_found
+        'correct_value': current_game.correct_value
     })
-    return render(request, 'game_is_over.html', context)
+
+    return render(request, 'game.html', context)
