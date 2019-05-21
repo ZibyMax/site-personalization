@@ -113,3 +113,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+GAME_MAX_ATTEMPTS = 3
+GAME_MIN_VALUE = 1
+GAME_MAX_VALUE = 9
