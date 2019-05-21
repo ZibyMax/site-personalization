@@ -10,13 +10,9 @@ MAX_VALUE = 9
 
 
 def play(game, player, current_value):
-    context = {'player1': False,
-               'is_over': game.is_over,
-               'is_is_value_found': game.is_value_found,
+    context = {'attempts': MAX_ATTEMPTS - game.current_attempt,
                'current_attempt': game.current_attempt,
-               'min_value': MIN_VALUE,
-               'max_value': MAX_VALUE,
-               'attempts': MAX_ATTEMPTS - game.current_attempt}
+               'current_value': current_value}
 
     if player == game.player1:
         context['player1'] = True
@@ -25,9 +21,17 @@ def play(game, player, current_value):
             game.save()
         context['correct_value'] = game.correct_value
     else:
+        context['player1'] = False
         if not game.is_over:
-            pass
-
+            if MAX_ATTEMPTS == game.current_attempt:
+                if game.correct_value == current_value:
+                    game.is_over = True
+                    game.is_value_found = True
+                else:
+                    context['values_comparison'] = 'more' if current_value > game.correct_value else 'less'
+                    game.current_attempt += 1
+    context['game_is_over': game.is_over]
+    context['is_value_found': game.is_value_found]
     return context
 
 
@@ -63,5 +67,5 @@ def play_the_game(request):
         context = {'error': '"Этого не может быть!'}
 
 
-
+    print(context)
     return render(request, 'game.html', context)

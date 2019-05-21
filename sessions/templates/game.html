@@ -8,5 +8,36 @@
         <div class="header">
             <h1>Игра "Угадай число"</h1>
         </div>
+        {% if player1 %}
+            <h2>Загаданное число: {{ correct_value }}</h2>
+            <p>Второй игрок будет пытаться угадать его</p>
+                {% if game_is_over %}
+                    {% if is_value_found %}
+                        <h2>Ваше число угадано с {{ current_attempt }} попытки!</h2>
+                    {% else %}
+                        <h2>Ваше число не угадали!</h2>
+                    {% endif %}
+                { % endif %}
+        {% else %}
+            {% if game_is_over %}
+                {% if is_value_found %}
+                    <h2>Вы угадали число {{ correct_value }}!</h2>
+                {% else %}
+                    <h2>Вы не угадали число!</h2>
+                {% endif %}
+            {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" value="Отправить">
+                </form>
+                {% if values_comparison == 'more %}
+                    <h2>Загаданное число больше числа {{ current_value }}</h2>
+                {% endif %}
+                {% if values_comparison == 'less %}
+                    <h2>Загаданное число меньше числа {{ current_value }}</h2>
+                {% endif %}
+            {% endif %}
+        {% endif %}
     </div>
 {% endblock %}
