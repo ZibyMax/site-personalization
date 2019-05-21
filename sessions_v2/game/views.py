@@ -1,8 +1,9 @@
 from random import randint
 
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.urls import reverse
 
 from .forms import GameForm
 from .models import Player, Game
@@ -90,3 +91,9 @@ def game(request):
     })
 
     return render(request, 'game.html', context)
+
+
+def reset(request):
+    if request.session.get('player_id', None):
+        del request.session['player_id']
+    return redirect(reverse('game'))
