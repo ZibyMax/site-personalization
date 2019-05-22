@@ -2,8 +2,6 @@ from random import randint
 
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.db.models import Q
-from django.urls import reverse
 
 from .forms import GameForm
 from .models import Player, Game
@@ -25,7 +23,13 @@ def get_player(request):
 
 
 def get_current_game(player):
-    current_game = Game.objects.filter(player1=player).filter(is_over=False).last()
+    current_game = Game.objects.filter(player1=player).filter(is_over=True).\
+            filter(player1_result_viewed=False).last()
+    if current_game is not None:
+        current_game.player1_result_viewed = True
+        current_game.save()
+    if current_game is None:
+        current_game = Game.objects.filter(player1=player).filter(is_over=False).last()
     if current_game is None:
         current_game = Game.objects.filter(player2=player).filter(is_over=False).last()
     if current_game is None:
@@ -33,8 +37,6 @@ def get_current_game(player):
         if current_game is not None:
             current_game.player2 = player
             current_game.save()
-    if current_game is None:
-        current_game = Game.objects.filter(Q(player1=player) | Q(player2=player)).filter(is_over=True).last()
     if current_game is None:
         current_game = Game.objects.create(player1=player)
     return current_game
@@ -70,11 +72,13 @@ def game(request):
                 if current_value == current_game.correct_value:
                     current_game.is_over = True
                     current_game.is_value_found = True
+                    current_game.player2_result_viewed = True
                     current_game.save()
                 else:
                     if current_game.current_attempt + 1 > settings.GAME_MAX_ATTEMPTS:
                         current_game.is_over = True
                         current_game.is_value_found = False
+                        current_game.player2_result_viewed = True
                         current_game.save()
                     else:
                         current_game.current_attempt += 1
@@ -91,9 +95,3 @@ def game(request):
     })
 
     return render(request, 'game.html', context)
-
-
-def reset(request):
-    if request.session.get('player_id', None):
-        del request.session['player_id']
-    return redirect(reverse('game'))

@@ -12,6 +12,8 @@ class Game(models.Model):
     is_value_found = models.BooleanField(default=False)
     current_attempt = models.IntegerField(default=1)
     correct_value = models.IntegerField(null=True)
+    player1_result_viewed = models.BooleanField(default=False)
+    player2_result_viewed = models.BooleanField(default=False)
 
 # class PlayerGameInfo(models.Model):
 #     pass

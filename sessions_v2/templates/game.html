@@ -25,7 +25,6 @@
                     <h2>Вы не угадали!</h2>
                 {% endif %}
             {% endif %}
-        <a href="{% url 'reset' %}">Начать новую игру</a>
         {% else %}
             {% if is_first_player %}
                 <h2>Загаданное число: {{ correct_value }}</h2>
