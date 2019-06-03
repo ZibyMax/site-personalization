@@ -10,12 +10,13 @@ from .models import Player, Game
 def get_player(request):
     player_id = request.session.get('player_id', None)
     if player_id:
-        players = Player.objects.filter(id=player_id)
-        if players.exists():
-            player = players.last()
-        else:
-            player = Player.objects.create()
-            request.session['player_id'] = player.id
+        player = Player.objects.get(id=player_id)
+        # players = Player.objects.filter(id=player_id)
+        # if players.exists():
+        #     player = players.last()
+        # else:
+        #     player = Player.objects.create()
+        #     request.session['player_id'] = player.id
     else:
         player = Player.objects.create()
         request.session['player_id'] = player.id
@@ -61,10 +62,12 @@ def game(request):
             current_value = None
             if request.method == 'POST':
                 form = GameForm(request.POST)
+                if form.is_valid():
+                    current_value = form.cleaned_data['value']
             else:
                 form = GameForm()
-            if form.is_valid():
-                current_value = form.cleaned_data['value']
+            # if form.is_valid():
+            #     current_value = form.cleaned_data['value']
             context.update({'form': form,
                             'current_value': current_value})
 
